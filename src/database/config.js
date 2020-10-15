@@ -5,7 +5,8 @@ exports.dbConnection = async () => {
     try {
         await mongoose.connect(process.env.URI, {
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
+            useCreateIndex: true
         });
         console.log('DB is connected');
     } catch (error) {
