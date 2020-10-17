@@ -4,27 +4,27 @@ const UserSchema = Schema({
 
     name: {
         type: String,
-        require: true
+        required: true
     },
     lastName: {
         type: String,
-        require: true
+        required: true
     },
     email: {
         type: String,
-        require: true,
+        required: true,
         unique: true
     },
     password: {
         type: String,
-        require: true,
+        required: true,
     },
     img: {
         type: String,
     },
     rol: {
         type: String,
-        require: true,
+        required: true,
         default: 'USER_ROL'
     },
     google: {
@@ -32,6 +32,6 @@ const UserSchema = Schema({
         default: false
     },
 
-});
+}, { collection: 'User' });
 
 module.exports = model('User', UserSchema);

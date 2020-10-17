@@ -4,9 +4,20 @@ const { createJwt } = require('../helpers/jwt');
 
 exports.getUsers = async (req, res) => {
 
-    const users = await User.find();
+    const pageNumber = Number(req.query.pageNumber) || 0;
 
-    res.json({ users })
+    const [users, total] = await Promise.all([
+        User.find()
+            .skip(pageNumber)
+            .limit(5),
+
+        User.countDocuments()
+    ]);
+
+    res.json({
+        users,
+        total
+    })
 }
 
 exports.createUser = async (req, res) => {
