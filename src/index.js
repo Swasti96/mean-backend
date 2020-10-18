@@ -4,6 +4,7 @@ const { dbConnection } = require('./database/config');
 const cors = require('cors');
 const morgan = require('morgan');
 const app = express();
+const path = require('path');
 
 // Inicialization
 app.set('port', process.env.PORT || 3000);
@@ -21,6 +22,12 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
+// Database connection
+dbConnection();
+
+//Public
+app.use(express.static(path.join(__dirname,'public')));
+
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/login', authRoutes);
@@ -29,8 +36,6 @@ app.use('/api/medics', medicRoutes);
 app.use('/api/all', seekerRoutes);
 app.use('/api/upload', uploaderRoutes);
 
-// Database connection
-dbConnection();
 // Server connection
 app.listen(app.get('port'), () => {
     console.log(`Server listening on port ${app.get('port')}`);
