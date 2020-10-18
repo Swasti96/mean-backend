@@ -89,3 +89,16 @@ exports.googleSignIn = async (req, res) => {
 
 
 }
+
+exports.renewToken = async(req,res) => {
+
+    const id = req.id;
+
+    //Generar TOKEN
+    const token = await createJwt(id);
+
+    res.json({
+        token
+    })
+
+}

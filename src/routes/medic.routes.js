@@ -24,6 +24,12 @@ router.post('/add-medic',
     createMedic
 );
 router.put('/update-medic/:id',
+    [
+        validateJwt,
+        check('name', 'Name is a required field').not().isEmpty(),
+        check('hospital', 'Hospital id must be a valid id').isMongoId(),
+        fieldsValidator
+    ],
     updateMedic
 );
 router.delete('/remove-medic/:id',

@@ -1,5 +1,5 @@
 const Medic = require('../models/medic');
-
+const Hospital = require('../models/hospitlal');
 
 exports.getMedics = async (req, res) => {
 
@@ -40,15 +40,69 @@ exports.createMedic = async (req, res) => {
 
 exports.updateMedic = async (req, res) => {
 
-    const { name, img } = req.body;
+    //medic id 
     const { id } = req.params;
+    //user id
+    const uid = req.id;
 
-    res.json('Update');
+    try {
+        const medicDB = await Medic.findById(id);
+        const hospitalDB = await Hospital.findById(req.body.hospital);
+
+        if (!medicDB) {
+            res.status(404).json({
+                msg: 'Ops this medic does not exist'
+            });
+        }
+
+        if (!hospitalDB) {
+            res.status(404).json({
+                msg: 'Ops this hospital does not exist'
+            });
+        }
+
+        const medicChanges = {
+            ...req.body,
+            user: uid
+        }
+
+        const updatedMedic = await Medic.findByIdAndUpdate(id, medicChanges, { new: true });
+
+        res.json({
+            updatedMedic
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Internal Error'
+        })
+    }
 }
 
 exports.removeMedic = async (req, res) => {
 
     const { id } = req.params;
+
+    try {
+        const medicDB = await Medic.findById(id);
+
+        if (!medicDB) {
+            res.status(404).json({
+                msg: 'Ops this medic does not exist'
+            });
+        }
+
+        await Medic.findByIdAndDelete(id);
+        res.json({
+            ok: true
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Internal Error'
+        });
+    }
 
     res.json('Remove');
 }

@@ -3,7 +3,7 @@ const Hospital = require('../models/hospitlal');
 
 exports.getHospitals = async (req, res) => {
 
-    const hospitals = await Hospital.find().populate('user','name lastName img');
+    const hospitals = await Hospital.find().populate('user', 'name lastName img');
 
     res.json({
         hospitals
@@ -30,23 +30,70 @@ exports.createHospital = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: ' Error inesperado'
+            msg: 'Internal Error'
         });
     }
 
     res.json('Post')
 }
 
-exports.updateHospital = (req, res) => {
+exports.updateHospital = async (req, res) => {
 
     const { id } = req.params;
-    const { name, img } = req.body;
+    const uid = req.id;
 
-    res.json('Update')
+    try {
+
+        const hospitalDB = await Hospital.findById(id);
+
+        if (!hospitalDB) {
+            return res.status(404).json({
+                msg: 'Ops, this id doesnt exist'
+            })
+        }
+
+        const hospitalChanges = {
+            ...req.body,
+            user: uid
+        }
+
+        const updatedHospital = await Hospital.findByIdAndUpdate(id, hospitalChanges, { new: true });
+
+        res.json({
+            updatedHospital
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Internal Error'
+        })
+    }
 }
 
-exports.removeHospital = (req, res) => {
+exports.removeHospital = async(req, res) => {
 
     const { id } = req.params;
-    res.json('Remove')
+
+    try {
+        const hospitalDB = await Hospital.findById(id);
+
+        if (!hospitalDB) {
+            return res.status(404).json({
+                msg: 'Ops, this id doesnt exist'
+            })
+        }
+
+        await Hospital.findByIdAndDelete(id);
+
+        res.json({
+            ok: true
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Internal Error'
+        });
+    }
+
+
 }

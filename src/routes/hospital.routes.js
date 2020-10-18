@@ -26,9 +26,15 @@ router.post('/add-hospital',
     createHospital
 );
 router.put('/update-hospital/:id',
+    [
+        validateJwt,
+        check('name', 'Name is a required field').not().isEmpty(),
+        fieldsValidator
+    ],
     updateHospital
 );
 router.delete('/remove-hospital/:id',
+    validateJwt,
     removeHospital
 );
 
