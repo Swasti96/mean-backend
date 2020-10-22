@@ -14,7 +14,7 @@ exports.login = async (req, res) => {
 
         if (!userDB) {
             return res.status(400).json({
-                msg: 'Email fail'
+                msg: 'Wrong email'
             })
         }
 
@@ -23,7 +23,7 @@ exports.login = async (req, res) => {
 
         if (!validPassowrd) {
             return res.status(400).json({
-                msg: 'Password fail'
+                msg: 'Wrong password'
             });
         }
 
@@ -90,15 +90,18 @@ exports.googleSignIn = async (req, res) => {
 
 }
 
-exports.renewToken = async(req,res) => {
+exports.renewToken = async (req, res) => {
 
     const id = req.id;
 
     //Generar TOKEN
     const token = await createJwt(id);
 
+    const user = await User.findById(id);
+
     res.json({
-        token
+        token,
+        user
     })
 
 }

@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
 const { createJwt } = require('../helpers/jwt');
+const user = require('../models/user');
 
 exports.getUsers = async (req, res) => {
 
@@ -21,7 +22,7 @@ exports.getUsers = async (req, res) => {
 }
 
 exports.createUser = async (req, res) => {
-    const { name, lastName, email, password } = req.body;
+    const { name, email, password } = req.body;
 
     try {
 
@@ -36,7 +37,6 @@ exports.createUser = async (req, res) => {
 
         const user = new User({
             name,
-            lastName,
             email,
             password
         });
@@ -83,12 +83,19 @@ exports.updateUser = async (req, res) => {
             const existEmail = await User.findOne({ email });
             if (existEmail) {
                 return res.status(400).json({
-                    msg: 'Ya existe un usuario con ese email'
+                    msg: 'Looks like another user already use that mail'
                 });
             }
         }
 
-        fields.email = email;
+        if (!userExist.google) {
+            fields.email = email;
+        }else if(userExist.email !== email){
+            return res.status(400).json({
+                ok:false,
+                msg: 'Google users cant changes email'
+            });
+        }
 
         const userUpdated = await User.findByIdAndUpdate(id, fields, { new: true });
 

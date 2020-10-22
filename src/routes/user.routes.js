@@ -20,7 +20,6 @@ router.get('/',
 router.post('/add-user',
     [
         check('name', 'Name is a require field').not().isEmpty(),
-        check('lastName', 'LastName is a require field').not().isEmpty(),
         check('email', 'Email is a require field').isEmail(),
         check('password', 'Password is a require field').not().isEmpty(),
         fieldsValidator
@@ -32,9 +31,8 @@ router.put('/update-user/:id',
     [
         validateJwt,
         check('name', 'Name is a require field').not().isEmpty(),
-        check('lastName', 'LastName is a require field').not().isEmpty(),
         check('email', 'Email is a require field').isEmail(),
-        // check('role', 'Role is a require field').not().isEmpty(),
+        check('role', 'Role is a require field').not().isEmpty(),
         fieldsValidator
     ],
     updateUser
