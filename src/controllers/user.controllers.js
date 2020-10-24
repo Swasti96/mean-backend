@@ -66,7 +66,7 @@ exports.createUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
 
     const { id } = req.params;
-    const { password, google, email, ...fields } = req.body;
+    const { password, google, email, role, ...fields } = req.body;
 
     try {
 
@@ -90,9 +90,9 @@ exports.updateUser = async (req, res) => {
 
         if (!userExist.google) {
             fields.email = email;
-        }else if(userExist.email !== email){
+        } else if (userExist.email !== email) {
             return res.status(400).json({
-                ok:false,
+                ok: false,
                 msg: 'Google users cant changes email'
             });
         }
