@@ -12,6 +12,31 @@ exports.getMedics = async (req, res) => {
     });
 }
 
+exports.getMedicById = async (req, res) => {
+
+    const id = req.params.id;
+
+    try {
+
+        const medic = await Medic.findById(id)
+            .populate('user', 'name')
+            .populate('hospital', 'name');
+
+
+        res.json({
+            medic
+        });
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Internal Server Error'
+        });
+    }
+
+}
+
 exports.createMedic = async (req, res) => {
 
     try {
@@ -32,7 +57,7 @@ exports.createMedic = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({
-            msg: 'Error inesperado'
+            msg: 'Internal Server Error'
         });
     }
 
