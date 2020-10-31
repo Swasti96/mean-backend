@@ -2,6 +2,7 @@ const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
 const { createJwt } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/google_verify');
+const { getMenuFrontEnd } = require('../helpers/menu_frontend');
 
 exports.login = async (req, res) => {
 
@@ -31,7 +32,8 @@ exports.login = async (req, res) => {
         const token = await createJwt(userDB._id)
 
         res.json({
-            token
+            token,
+            menu: getMenuFrontEnd(userDB.rol)
         });
 
     } catch (error) {
@@ -77,7 +79,8 @@ exports.googleSignIn = async (req, res) => {
 
         res.json({
             msg: 'Google SignIn',
-            token
+            token,
+            menu: getMenuFrontEnd(user.rol)
         });
 
     } catch (error) {
@@ -101,7 +104,8 @@ exports.renewToken = async (req, res) => {
 
     res.json({
         token,
-        user
+        user,
+        menu: getMenuFrontEnd(user.rol)
     })
 
 }
