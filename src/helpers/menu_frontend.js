@@ -6,10 +6,9 @@ exports.getMenuFrontEnd = (role = 'USER_ROL') => {
             icono: 'mdi mdi-gauge',
             submenu: [
                 { titulo: 'Main', url: '/' },
-                { titulo: 'ProgressBar', url: '/dashboard/progress' },
-                { titulo: 'Gráficas', url: '/dashboard/charts' },
-                { titulo: 'Promesas', url: '/dashboard/promesas' },
-                { titulo: 'Rxjs', url: '/dashboard/rxjs' },
+                // { titulo: 'ProgressBar', url: '/dashboard/progress' },
+                // { titulo: 'Promesas', url: '/dashboard/promesas' },
+                // { titulo: 'Rxjs', url: '/dashboard/rxjs' },
             ]
         },
         {
@@ -24,7 +23,8 @@ exports.getMenuFrontEnd = (role = 'USER_ROL') => {
     ]
 
     if (role === 'ADMIN_ROL') {
-        menu[1].submenu.unshift({ titulo: 'User', url: '/dashboard/users' })
+        menu[1].submenu.unshift({ titulo: 'User', url: '/dashboard/users' });
+        menu[0].submenu.unshift({ titulo: 'Gráficas', url: '/dashboard/charts' });
     }
 
     return menu;

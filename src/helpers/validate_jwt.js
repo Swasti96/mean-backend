@@ -30,6 +30,44 @@ exports.validateJwt = (req, res, next) => {
 exports.validate_ADMIN_ROLE = async (req, res, next) => {
 
     const uid = req.id;
+
+    try {
+
+        const userDB = await User.findById(uid);
+
+
+        if (!userDB) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'User not exist'
+            });
+        }
+        // && uid === id
+        if (userDB.rol !== 'ADMIN_ROL') {
+            return res.status(403).json({
+                ok: false,
+                msg: 'You need authorization'
+            })
+        }
+        next()
+
+
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Internal Server Error'
+        })
+    }
+
+}
+
+
+
+exports.validate_ADMIN_ROLE_same_user = async (req, res, next) => {
+
+    const uid = req.id;
     const { id } = req.params;
     try {
 
@@ -42,15 +80,19 @@ exports.validate_ADMIN_ROLE = async (req, res, next) => {
                 msg: 'User not exist'
             });
         }
-        if (userDB.rol === 'ADMIN_ROL' && uid === id) {
+        // && uid === id
+        if (userDB.rol === 'ADMIN_ROL' || uid === id) {
 
             next();
+
         } else {
             return res.status(403).json({
                 ok: false,
                 msg: 'You need authorization'
             });
         }
+        //    
+        // }
 
 
 

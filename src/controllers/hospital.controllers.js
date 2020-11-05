@@ -3,10 +3,20 @@ const Hospital = require('../models/hospitlal');
 
 exports.getHospitals = async (req, res) => {
 
-    const hospitals = await Hospital.find().populate('user', 'name lastName img');
+    const pageNumber = Number(req.query.pageNumber) || 0;
+
+    const [hospitals, total] = await Promise.all([
+        Hospital.find()
+            .skip(pageNumber)
+            .limit(5)
+            .populate('user', 'name lastName img'),
+
+        Hospital.countDocuments()
+    ]);
 
     res.json({
-        hospitals
+        hospitals,
+        total
     });
 }
 
@@ -70,7 +80,7 @@ exports.updateHospital = async (req, res) => {
     }
 }
 
-exports.removeHospital = async(req, res) => {
+exports.removeHospital = async (req, res) => {
 
     const { id } = req.params;
 

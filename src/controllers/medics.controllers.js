@@ -3,12 +3,21 @@ const Hospital = require('../models/hospitlal');
 
 exports.getMedics = async (req, res) => {
 
-    const medics = await Medic.find()
-        .populate('user', 'name')
-        .populate('hospital', 'name');
+    const pageNumber = Number(req.query.pageNumber) || 0;
+
+    const [medics, total] = await Promise.all([
+        Medic.find()
+            .skip(pageNumber)
+            .limit(5)
+            .populate('user', 'name')
+            .populate('hospital', 'name'),
+
+        Medic.countDocuments()
+    ]);
 
     res.json({
-        medics
+        medics,
+        total
     });
 }
 

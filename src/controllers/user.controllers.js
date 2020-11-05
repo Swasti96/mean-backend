@@ -1,7 +1,6 @@
 const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
 const { createJwt } = require('../helpers/jwt');
-const user = require('../models/user');
 
 exports.getUsers = async (req, res) => {
 
